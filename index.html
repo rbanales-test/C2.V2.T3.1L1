@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Topic 3.1: Common Synthesizer Waveforms</title>
+  <style>
+    :root {
+      --coursera-blue: #0056D2;
+      --coursera-blue-focus: #00419E;
+      --text-dark: #1F1F1F;
+      --bg-light: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --border-color: #D1D5DB;
+      --focus-outline: #FFB800;
+      --highlight-bg: #EBF3FF;
+      --wave-color: #0056D2;
+      --grid-line: #E5E7EB;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+    }
+
+    .interactive-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      max-width: 760px;
+      width: 100%;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--text-dark);
+    }
+
+    p.lead-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* Waveform Toggles */
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .btn-wave {
+      background-color: #F3F4F6;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-dark);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-wave:focus {
+      outline: 3px solid var(--focus-outline);
+      outline-offset: 2px;
+    }
+
+    .btn-wave[aria-pressed="true"] {
+      background-color: var(--highlight-bg);
+      border-color: var(--coursera-blue);
+      color: var(--coursera-blue);
+    }
+
+    /* Oscilloscope Display */
+    .display-box {
+      background-color: #F9FAFB;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .display-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #4B5563;
+      margin-bottom: 6px;
+    }
+
+    .scope-svg {
+      width: 100%;
+      height: 140px;
+      display: block;
+    }
+
+    /* Harmonic Properties Card */
+    .harmonic-specs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .spec-item {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .spec-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6B7280;
+      text-transform: uppercase;
+    }
+
+    .spec-val {
+      font-weight: 600;
+      color: var(--coursera-blue);
+    }
+
+    /* Audio Action Row */
+    .audio-action-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-audio {
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      background-color: var(--coursera-blue);
+      border: 2px solid var(--coursera-blue-focus);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-audio:focus {
+      outline: 3px solid var(--focus-outline);
+      outline-offset: 2px;
+    }
+
+    .audio-hint {
+      font-size: 0.85rem;
+      color: #4B5563;
+    }
+
+    /* Accessible Info Card */
+    .info-card {
+      background-color: var(--highlight-bg);
+      border-left: 4px solid var(--coursera-blue);
+      padding: 16px;
+      border-radius: 0 6px 6px 0;
+      line-height: 1.5;
+    }
+
+    .info-card h3 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .info-card p {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    .info-card .analogy-text {
+      margin-top: 8px;
+      font-size: 0.88rem;
+      color: #374151;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #4B5563;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="interactive-card" role="region" aria-labelledby="waveform-title">
+    <h2 id="waveform-title">Topic 3.1: Common Synthesizer Waveforms</h2>
+    <p class="lead-text">
+      Each waveform shape has a different mix of harmonics, and that mix gives it its color. Select a waveform to inspect its oscilloscope shape (Figures 3–7) and listen to its raw harmonic timbre.
+    </p>
+
+    <!-- Waveform Selection -->
+    <div class="selector-grid" role="group" aria-label="Waveform Selection">
+      <button class="btn-wave" id="btn-sine" aria-pressed="true" aria-controls="status-panel">Sine</button>
+      <button class="btn-wave" id="btn-triangle" aria-pressed="false" aria-controls="status-panel">Triangle</button>
+      <button class="btn-wave" id="btn-square" aria-pressed="false" aria-controls="status-panel">Square</button>
+      <button class="btn-wave" id="btn-pulse" aria-pressed="false" aria-controls="status-panel">Pulse (25%)</button>
+      <button class="btn-wave" id="btn-saw" aria-pressed="false" aria-controls="status-panel">Saw</button>
+    </div>
+
+    <!-- Oscilloscope Display -->
+    <div class="display-box" aria-hidden="true">
+      <div class="display-header">
+        <span>Amplitude (+1 to -1)</span>
+        <span>Time across horizontal axis (5 cycles)</span>
+      </div>
+
+      <svg class="scope-svg" viewBox="0 0 600 120" preserveAspectRatio="none">
+        <!-- Center line -->
+        <line x1="0" y1="60" x2="600" y2="60" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="4" />
+        <!-- Top / Bottom boundaries -->
+        <line x1="0" y1="10" x2="600" y2="10" stroke="var(--grid-line)" stroke-width="1" />
+        <line x1="0" y1="110" x2="600" y2="110" stroke="var(--grid-line)" stroke-width="1" />
+
+        <!-- Waveform Path -->
+        <path id="svg-wave-path" d="" fill="none" stroke="var(--wave-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <!-- Harmonic Properties -->
+      <div class="harmonic-specs">
+        <div class="spec-item">
+          <span class="spec-label">Visual Shape</span>
+          <span class="spec-val" id="spec-shape">Smooth curve</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Harmonic Content</span>
+          <span class="spec-val" id="spec-harmonics">Only the fundamental (fewest harmonics)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Action -->
+    <div class="audio-action-row">
+      <button id="btn-play" class="btn-audio" aria-label="Audition current waveform sound">
+        ▶ Audition Waveform
+      </button>
+      <span class="audio-hint" id="audio-hint">Listening to: Sine wave (purest tone, only fundamental).</span>
+    </div>
+
+    <!-- Accessible Status Card -->
+    <div id="status-panel" class="info-card" role="status" aria-live="polite">
+      <h3 id="panel-figure">Figure 3: Sine Wave</h3>
+      <p id="panel-desc">
+        This is the purest sound, with no extra harmonics. Only the fundamental is present, which is why it sounds pure and simple.
+      </p>
+      <div class="analogy-text" id="panel-analogy">
+        It sounds like a tuning fork or the soft tone of a flute.
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>Harmonic note:</strong> Harmonics are numbered 1st, 2nd, 3rd and so on. The odd-numbered ones (1st, 3rd, 5th) give a hollow sound. The even-numbered ones (2nd, 4th, 6th) add fullness. Square and triangle waves use only odd harmonics (the triangle’s fall off much faster). Saw waves use both odd and even. A pulse wave at 25% is missing every fourth harmonic.
+    </div>
+  </main>
+
+  <script>
+    // Exact text descriptions from Topic 3.1
+    const waveData = {
+      sine: {
+        figure: "Figure 3: Sine Wave",
+        shape: "Smooth curve",
+        harmonics: "Only the fundamental is present (purest, fewest harmonics)",
+        desc: "This is the purest sound, with no extra harmonics. Only the fundamental is present, which is why it sounds pure and simple.",
+        analogy: "It sounds like a tuning fork or the soft tone of a flute.",
+        audioText: "Listening to: Sine wave (purest tone, only fundamental).",
+        // 5 sine cycles over 600px width (wavelength = 120px)
+        svgPath: "M 0 60 Q 30 10 60 60 T 120 60 Q 150 10 180 60 T 240 60 Q 270 10 300 60 T 360 60 Q 390 10 420 60 T 480 60 Q 510 10 540 60 T 600 60",
+        audioMode: 'sine'
+      },
+      triangle: {
+        figure: "Figure 5: Triangle Wave",
+        shape: "Soft ramps",
+        harmonics: "Odd harmonics only, falling off quickly (soft and round)",
+        desc: "Also odd harmonics, but much weaker than a square’s. It sounds softer and rounder, like a flute with a little extra color.",
+        analogy: "Odd harmonics, but much weaker than a square's, so the tone is softer with a little buzz.",
+        audioText: "Listening to: Triangle wave (soft ramps, subdued odd harmonics).",
+        // 5 triangle cycles
+        svgPath: "M 0 60 L 30 15 L 90 105 L 150 15 L 210 105 L 270 15 L 330 105 L 390 15 L 450 105 L 510 15 L 570 105 L 600 60",
+        audioMode: 'triangle'
+      },
+      square: {
+        figure: "Figure 4: Square Wave",
+        shape: "Flat top, sudden jumps",
+        harmonics: "Odd harmonics only (hollow and reedy)",
+        desc: "Only odd harmonics, like the clarinet in Figure 2, so it sounds hollow and reedy. It is a good match for clarinet-like tones, retro video-game sounds and classic synth leads.",
+        analogy: "Its energy is in the odd harmonics, giving the hollow tone of a clarinet.",
+        audioText: "Listening to: Square wave (hollow, reedy sound, odd harmonics only).",
+        // 5 square cycles
+        svgPath: "M 0 15 L 60 15 L 60 105 L 120 105 L 120 15 L 180 15 L 180 105 L 240 105 L 240 15 L 300 15 L 300 105 L 360 105 L 360 15 L 420 15 L 420 105 L 480 105 L 480 15 L 540 15 L 540 105 L 600 105",
+        audioMode: 'square'
+      },
+      pulse: {
+        figure: "Figure 6: Pulse wave (25% duty cycle)",
+        shape: "Width you can change (on for a quarter of cycle)",
+        harmonics: "Odd and even harmonics, missing every fourth harmonic",
+        desc: "A pulse wave is like a square wave, but its width can change. The duty cycle is how much of each cycle is 'on.' At 50%, it is a square wave. At 25%, it is on for a quarter of each cycle. A narrower pulse sounds thinner and more nasal.",
+        analogy: "Narrowing the pulse makes the sound thinner and more nasal.",
+        audioText: "Listening to: Pulse wave at 25% duty cycle (thinner, nasal character).",
+        // 5 pulse cycles: 30px high (25%), 90px low (75%)
+        svgPath: "M 0 15 L 30 15 L 30 105 L 120 105 L 120 15 L 150 15 L 150 105 L 240 105 L 240 15 L 270 15 L 270 105 L 360 105 L 360 15 L 390 15 L 390 105 L 480 105 L 480 15 L 510 15 L 510 105 L 600 105",
+        audioMode: 'pulse25'
+      },
+      saw: {
+        figure: "Figure 7: Sawtooth wave",
+        shape: "Ramp with sudden drop",
+        harmonics: "Every harmonic present, both even and odd (bright, buzzy, rich)",
+        desc: "Every harmonic is present, both even and odd. The result is bright, buzzy and brassy. It is common for bass sounds, leads, brass-like sounds and thick sounds.",
+        analogy: "<strong>Analogy: a violin.</strong> A bowed violin string is close to a saw wave: bright, rich and full of harmonics.",
+        audioText: "Listening to: Saw wave (bright, buzzy, rich with all harmonics).",
+        // 5 saw cycles: ramps up from 105 to 15, drops vertical
+        svgPath: "M 0 105 L 120 15 L 120 105 L 240 15 L 240 105 L 360 15 L 360 105 L 480 15 L 480 105 L 600 15",
+        audioMode: 'sawtooth'
+      }
+    };
+
+    let activeWave = 'sine';
+    let audioCtx = null;
+
+    const buttons = {
+      sine: document.getElementById('btn-sine'),
+      triangle: document.getElementById('btn-triangle'),
+      square: document.getElementById('btn-square'),
+      pulse: document.getElementById('btn-pulse'),
+      saw: document.getElementById('btn-saw')
+    };
+
+    const panelFigure = document.getElementById('panel-figure');
+    const panelDesc = document.getElementById('panel-desc');
+    const panelAnalogy = document.getElementById('panel-analogy');
+    const specShape = document.getElementById('spec-shape');
+    const specHarmonics = document.getElementById('spec-harmonics');
+    const svgPath = document.getElementById('svg-wave-path');
+    const audioHint = document.getElementById('audio-hint');
+    const btnPlay = document.getElementById('btn-play');
+
+    function selectWave(key) {
+      activeWave = key;
+      Object.keys(buttons).forEach(k => {
+        buttons[k].setAttribute('aria-pressed', k === key ? 'true' : 'false');
+      });
+
+      const d = waveData[key];
+      panelFigure.textContent = d.figure;
+      panelDesc.textContent = d.desc;
+      panelAnalogy.innerHTML = d.analogy;
+      specShape.textContent = d.shape;
+      specHarmonics.textContent = d.harmonics;
+      audioHint.textContent = d.audioText;
+      svgPath.setAttribute('d', d.svgPath);
+    }
+
+    // Initialize first shape
+    selectWave('sine');
+
+    Object.keys(buttons).forEach(k => {
+      buttons[k].addEventListener('click', () => selectWave(k));
+    });
+
+    btnPlay.addEventListener('click', () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const now = audioCtx.currentTime;
+      const duration = 1.2;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.frequency.setValueAtTime(220.0, now); // A3 fundamental
+
+      if (waveData[activeWave].audioMode === 'pulse25') {
+        // Mathematical synthesis of a 25% duty cycle pulse wave via Fourier coefficients:
+        // bn = (2 / (n * PI)) * sin(n * PI * 0.25). Notice that for n=4, 8, 12... bn = 0.
+        // This strictly reproduces: "missing every fourth harmonic".
+        const numTerms = 64;
+        const real = new Float32Array(numTerms);
+        const imag = new Float32Array(numTerms);
+        for (let n = 1; n < numTerms; n++) {
+          imag[n] = (2 / (n * Math.PI)) * Math.sin(n * Math.PI * 0.25);
+        }
+        const pulseWave = audioCtx.createPeriodicWave(real, imag);
+        osc.setPeriodicWave(pulseWave);
+      } else {
+        osc.type = waveData[activeWave].audioMode;
+      }
+
+      // Smooth amplitude envelope to prevent clicks
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.25, now + 0.04);
+      gain.gain.setValueAtTime(0.25, now + duration - 0.08);
+      gain.gain.linearRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+    });
+  </script>
+</body>
+</html>
